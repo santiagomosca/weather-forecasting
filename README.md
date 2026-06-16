@@ -166,3 +166,15 @@ pytest tests/ -v
 ```
 
 16 tests en total: 11 de API y 5 de modelo.
+
+---
+
+## Notebook
+
+El notebook `notebooks/PRACTICA_DL_MOSCA_SANTIAGO.ipynb` corresponde al desarrollo
+exploratorio original realizado para la asignatura de Deep Learning. Documenta el
+análisis del dataset, la comparativa de arquitecturas y la selección del modelo final.
+
+No está pensado para ejecutarse en este entorno: las rutas y carpetas que referencia
+corresponden al entorno de desarrollo original. Para reproducir los experimentos,
+utilizar los scripts `training/train_baseline.py` y `training/train_lstm.py`.

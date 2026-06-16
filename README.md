@@ -21,7 +21,7 @@ El modelo seleccionado es una **LSTM** (1 capa, 64 unidades ocultas, ventana de 
 
 ## Enlaces
 
-- **GitHub:** _pendiente_
+- **GitHub:** https://github.com/santiagomosca/weather-forecasting
 - **W&B Project:** _pendiente_
 - **Endpoint en producción:** _pendiente_
 

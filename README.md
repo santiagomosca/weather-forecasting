@@ -22,7 +22,7 @@ El modelo seleccionado es una **LSTM** (1 capa, 64 unidades ocultas, ventana de 
 ## Enlaces
 
 - **GitHub:** https://github.com/santiagomosca/weather-forecasting
-- **W&B Project:** _pendiente_
+- **W&B Report:** https://wandb.ai/santiagomosca85-wand-csic/weather-forecasting/reports/An-lisis-de-experimentos-Predicci-n-de-temperatura-con-LSTM--VmlldzoxNzI0NDk1MA
 - **Endpoint en producción:** _pendiente_
 
 ---

@@ -290,16 +290,42 @@ for config in lstm_configs:
     print(f"MAE  : {mae:.4f} °C")
     print(f"RMSE : {rmse:.4f} °C")
 
-    # Log de métricas finales de test en W&B
-    wandb.log({'test_mae': mae, 'test_rmse': rmse})
-    wandb.finish()
-
+    # Guardar resultados en disco
+    npz_path = f'artifacts/{nombre}_test_results.npz'
     np.savez(
-        f'artifacts/{nombre}_test_results.npz',
+        npz_path,
         y_true =y_true,
         y_pred =y_pred,
         mae    =np.array(mae),
         rmse   =np.array(rmse),
         config =np.array(str(config))
     )
-    print(f"Resultados guardados en artifacts/{nombre}_test_results.npz")
+    print(f"Resultados guardados en {npz_path}")
+
+    # -------------------------------------------------------
+    # Log de métricas y artefactos en W&B
+    # -------------------------------------------------------
+    run = wandb.run
+
+    # Métricas finales de test
+    wandb.log({'test_mae': mae, 'test_rmse': rmse})
+
+    # Artefacto: checkpoint del modelo
+    model_artifact = wandb.Artifact(
+        name       =nombre,
+        type       ='model',
+        description=f'LSTM {nombre} — w={config["window_size"]}, hidden={config["hidden_size"]}, layers={config["num_layers"]}'
+    )
+    model_artifact.add_file(checkpoint.best_model_path)
+    run.log_artifact(model_artifact)
+
+    # Artefacto: resultados de test
+    eval_artifact = wandb.Artifact(
+        name       =f'{nombre}_test_results',
+        type       ='evaluation',
+        description=f'Predicciones y métricas de {nombre} sobre test set'
+    )
+    eval_artifact.add_file(npz_path)
+    run.log_artifact(eval_artifact)
+
+    wandb.finish()

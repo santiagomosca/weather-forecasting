@@ -265,15 +265,51 @@ rmse = np.sqrt(mean_squared_error(y_true, y_pred))
 print(f"MAE  : {mae:.4f} °C")
 print(f"RMSE : {rmse:.4f} °C")
 
-# Log de métricas finales de test en W&B
-wandb.log({'test_mae': mae, 'test_rmse': rmse})
-wandb.finish()
-
+# Guardar resultados en disco
+npz_path = 'artifacts/baseline_test_results.npz'
 np.savez(
-    'artifacts/baseline_test_results.npz',
+    npz_path,
     y_true=y_true,
     y_pred=y_pred,
     mae   =np.array(mae),
     rmse  =np.array(rmse),
 )
-print("\nResultados guardados en artifacts/baseline_test_results.npz")
+print(f"\nResultados guardados en {npz_path}")
+
+# -------------------------------------------------------
+# 11. Log de métricas y artefactos en W&B
+# -------------------------------------------------------
+run = wandb.run
+
+# Métricas finales de test
+wandb.log({'test_mae': mae, 'test_rmse': rmse})
+
+# Artefacto: scalers (preprocessing)
+scaler_artifact = wandb.Artifact(
+    name       ='scalers',
+    type       ='preprocessing',
+    description='StandardScaler ajustado sobre train set (features y target)'
+)
+scaler_artifact.add_file('artifacts/scaler_X.pkl')
+scaler_artifact.add_file('artifacts/scaler_y.pkl')
+run.log_artifact(scaler_artifact)
+
+# Artefacto: checkpoint del modelo
+model_artifact = wandb.Artifact(
+    name       ='MLP_baseline',
+    type       ='model',
+    description='MLP baseline entrenado con w=4, lr=0.001, SGD+momentum'
+)
+model_artifact.add_file(checkpoint.best_model_path)
+run.log_artifact(model_artifact)
+
+# Artefacto: resultados de test
+eval_artifact = wandb.Artifact(
+    name       ='baseline_test_results',
+    type       ='evaluation',
+    description='Predicciones y métricas del MLP baseline sobre test set'
+)
+eval_artifact.add_file(npz_path)
+run.log_artifact(eval_artifact)
+
+wandb.finish()

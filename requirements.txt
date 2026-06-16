@@ -1,0 +1,9 @@
+fastapi==0.137.1
+uvicorn==0.49.0
+pydantic==2.13.4
+numpy==2.4.4
+torch==2.12.0
+pytorch-lightning==2.5.2
+scikit-learn==1.8.0
+wandb==0.27.2
+
